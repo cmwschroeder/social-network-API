@@ -4,7 +4,10 @@
   "description": "[![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)\r # social-network-API",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index",
+    "seed": "node utils/seeds",
+    "heroku-postbuild": "node utils/seeds.js"
   },
   "repository": {
     "type": "git",
