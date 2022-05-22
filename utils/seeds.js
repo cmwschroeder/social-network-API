@@ -12,9 +12,9 @@ connection.once('open', async () => {
     // Drop existing users
     await User.deleteMany({});
 
-    await Thought.collection.insertOne({
+    const initThought = {
         thoughtText: 'Cool Stuff',
-        username: 'User',
+        username: 'CoolUser',
         reactions: [{
             reactionBody: 'Like',
             username: "OtherUser",
@@ -23,6 +23,22 @@ connection.once('open', async () => {
             reactionBody: 'Super Like',
             username: "AnotherUser",
         }],
+    }
+
+    await Thought.collection.insertOne(initThought);
+
+    const coolUser = {
+        username: 'CoolUser',
+        email: 'cooluser@email.com',
+        thoughts: [initThought],
+    };
+
+    await User.collection.insertOne(coolUser);
+
+    await User.collection.insertOne({
+        username: 'OtherUser',
+        email: 'otheruser@email.com',
+        friends: [coolUser],
     });
 
     process.exit(0);
