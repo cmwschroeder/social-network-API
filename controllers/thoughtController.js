@@ -1,9 +1,12 @@
 const { User, Thought } = require('../models');
 
 module.exports = {
-    getThoughts(req, res) {
-        Thought.find()
-          .then((thoughts) => res.json(thoughts))
-          .catch((err) => res.status(500).json(err));
+    async getThoughts(req, res) {
+        try {
+            const thoughts = await Thought.find();
+            res.json(thoughts);
+        } catch(err) {
+            res.status(500).json(err);
+        }
     }
 }
