@@ -1,3 +1,4 @@
+const {ObjectId} = require('mongoose');
 const { User, Thought } = require('../models');
 
 module.exports = {
@@ -96,6 +97,56 @@ module.exports = {
                 res.json('User Not Found')
             }
         } catch(err) {
+            res.status(500).json(err);
+        }
+    },
+    //Function that will add a friend to the friends list of the userid passed in
+    async addFriend (req, res) {
+        try {
+            //get user based on id
+            const user = await User.find({ _id: req.params.userId });
+            //get friend based on id
+            const friend = await User.find({ _id: req.params.friendId });
+            //don't do anything if the user or friend wasn't found
+            if(user.length != 0 && friend.length != 0) {
+                //updates the user with the given id, uses $push to added an objectId to list
+                const updatedUser = await User.findOneAndUpdate(
+                    { _id: req.params.userId },
+                    { $push: { friends: friend[0]._id } },
+                    { runValidators: true, new: true }
+                );
+                res.json(updatedUser);
+            } else if(user.length === 0) {
+                res.json('No user found by that user id')
+            } else {
+                res.json('No user found by that friend id')
+            }
+        } catch(err) {
+            res.status(500).json(err);
+        }
+    },
+    //Function that will remove a friend from the friends list of the userid passed in
+    async removeFriend (req, res) {
+        try {
+            //get user based on id
+            const user = await User.find({ _id: req.params.userId });
+            //get friend based on id
+            const friend = await User.find({ _id: req.params.friendId });
+            //don't do anything if the user wasn't found
+            if(user.length != 0) {
+                //updates the user with the given id, uses $pullAll to remove an objectId from list
+                const updatedUser = await User.updateOne(
+                    { _id: req.params.userId},
+                    { $pullAll: { friends: [friend[0]._id] }},
+                    { runValidators: true, new: true }
+                );
+                res.json(updatedUser);
+            } else {
+                res.json('No user found by that id')
+            }
+
+        } catch(err) {
+            console.log(err);
             res.status(500).json(err);
         }
     }
