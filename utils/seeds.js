@@ -30,7 +30,8 @@ connection.once('open', async () => {
     const coolUser = {
         username: 'CoolUser',
         email: 'cooluser@email.com',
-        thoughts: [initThought],
+        thoughts: [initThought._id],
+        friends: [],
     };
 
     await User.collection.insertOne(coolUser);
@@ -38,7 +39,8 @@ connection.once('open', async () => {
     await User.collection.insertOne({
         username: 'OtherUser',
         email: 'otheruser@email.com',
-        friends: [coolUser],
+        friends: [coolUser._id],
+        thoughts: [],
     });
 
     process.exit(0);
